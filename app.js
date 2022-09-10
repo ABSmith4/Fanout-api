@@ -12,19 +12,14 @@ const client = new twilio(process.env.TWILIO_ACCNT_SID, process.env.TWILIO_AUTH_
 app.use(express.json());
 app.use(express.urlencoded( { extended: true }));
 
-
-router.get('/', (req,res) => {
-  res.send("Hello");
-});
-
 router.post('/sendFanout', (req,res) => {
   console.log(req.body);
   let recipient = req.body.recipient
   client.messages
   .create({
     body: 'Fanout Alert! Someone you know has been in a car accident!',
-    to: recipient, // Text this number
-    from: process.env.TWILIO_SENDER_NUM, // From a valid Twilio number
+    to: recipient,
+    from: process.env.TWILIO_SENDER_NUM,
   })
   .then((message) => console.log(message.sid));
   res.send('SendingFanout');
