@@ -1,7 +1,7 @@
 # Fanout-api
-Backend Set up for hackathon api
+Backend Set up for hackathon api.
 
-Env variables that need to be configured for application
+Env variables that need to be configured for application:
 
 ```
 TWILIO_ACCNT_SID
