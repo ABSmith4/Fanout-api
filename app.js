@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded( { extended: true }));
 
 router.post('/sendFanout', (req,res) => {
-  let recipient = req.body.recipient
+  let recipient = req.body.recipient;
   client.messages
   .create({
     body: 'Fanout Alert! Someone you know has been in a car accident!',
