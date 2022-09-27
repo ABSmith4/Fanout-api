@@ -1,18 +1,29 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
+const pool = require('./v1/database/config/config')
+const bodyparser = require("body-parser");
 
 const express = require('express');
 const app = express();
+const PORT = process.env.PORT || 3000;
 const router = express.Router();
 const twilio = require('twilio');
 const client = new twilio(process.env.TWILIO_ACCNT_SID, process.env.TWILIO_AUTH_TOKEN);
+const cors = require('cors')
+
+app.use(bodyparser.json())
+app.use(bodyparser.urlencoded({ extended: true }));
+
 
 
 app.use(express.json());
 app.use(express.urlencoded( { extended: true }));
+app.use(cors())
 
-router.post('/sendFanout', (req,res) => {
+
+
+router.post('/sendFanout', (req, res) => {
   let recipient = req.body.recipient;
   client.messages
   .create({
@@ -26,5 +37,12 @@ router.post('/sendFanout', (req,res) => {
 
 app.use('/',router);
 
-app.listen(process.env.port || 3000);
-console.log('Web Server is listening at port '+ (process.env.port || 3000));
+
+const v1userRouter = require("./v1/routes/userRoutes");
+
+app.use("/api/v1/users", v1userRouter);
+
+app.listen(PORT, () => {
+    console.log(`Web Server is listening at port ${PORT}`);
+});
+
