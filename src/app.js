@@ -3,6 +3,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 const pool = require('./v1/database/config/config')
 const bodyparser = require("body-parser");
+const fs = require('fs');
+
 
 const express = require('express');
 const app = express();
@@ -38,9 +40,21 @@ router.post('/sendFanout', (req, res) => {
 app.use('/',router);
 
 
-const v1userRouter = require("./v1/routes/userRoutes");
+//updated route handler??
+const routes = fs.readdirSync('./src/v1/routes').filter(file => file.endsWith('.js'));
 
-app.use("/api/v1/users", v1userRouter);
+const v1routes = (async () => {
+  for (const route of routes) {
+    require(`./v1/routes/${route}`)
+  }
+})
+
+
+//const v1userRouter = require("./v1/routes/userRoutes");
+
+app.use("/api/v1", v1routes);
+
+
 
 app.listen(PORT, () => {
     console.log(`Web Server is listening at port ${PORT}`);
